@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>RC Car Control · MQTT</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mqtt/5.10.1/mqtt.min.js"></script>
+  <link href="controller_style.css" rel="stylesheet">
+</head>
+<body>
+<div id="app">
+  
+  <div id="top">
+    <div class="status-bar">
+      <div class="badge"><div class="dot" id="conn-dot"></div><span id="status-text">OFFLINE</span></div>
+      
+      <div class="badge" id="battery-badge">
+        <svg id="bat-icon" width="18" height="10" viewBox="0 0 18 10" fill="none">
+          <rect x="0.5" y="0.5" width="15" height="9" rx="1.5" stroke="var(--text-dim)" stroke-width="1"/>
+          <rect x="16" y="3" width="2" height="4" rx="0.5" fill="var(--text-dim)"/>
+          <rect id="bat-fill" x="2" y="2" width="0" height="6" rx="1" fill="var(--glow-gr)"/>
+        </svg>
+        <span id="bat-pct" style="font-family:'Share Tech Mono',monospace;font-size:.58rem;color:var(--text-dim)">—%</span>
+        <span id="bat-v"   style="font-family:'Share Tech Mono',monospace;font-size:.55rem;color:var(--text-dim)">—V</span>
+      </div>
+    </div>
+  </div>
+  
+  <div id="middle">
+    
+    <!-- Velocímetro numérico -->
+    <div class="speedo-wrap">
+      <div class="speedo-number" id="speedo-val">0</div>
+      <div class="speedo-unit-text">KM/H</div>
+    </div>
+    
+    <!-- Joystick + Throttle -->
+    <div class="input-row">
+      
+      <!-- Joystick: apenas eixo X (direção) -->
+      <div class="joystick-wrap">
+        <div class="panel-label">DIREÇÃO</div>
+        <div class="joystick-outer" id="joystick">
+          <div class="joy-zone" style="width:33%;height:33%"></div>
+          <div class="joy-zone" style="width:66%;height:66%"></div>
+          <div class="joystick-knob" id="joy-knob"></div>
+        </div>
+        <div class="steer-bar-wrap">
+          <div class="steer-track">
+            <div class="steer-fill" id="steer-fill" style="left:50%;width:0%"></div>
+            <div class="steer-center"></div>
+          </div>
+          <div class="steer-val" id="steer-val">0°</div>
+        </div>
+      </div>
+      
+      <!-- Throttle: apenas positivo (0–100%) -->
+      <div class="throttle-wrap">
+        <div class="panel-label">ACELERAÇÃO</div>
+        <div class="throttle-outer" id="throttle">
+          <div class="throttle-track">
+            <div class="throttle-fill" id="throttle-fill" style="height:0%"></div>
+          </div>
+          <div class="throttle-knob" id="throttle-knob">0%</div>
+        </div>
+        <div class="throttle-val" id="throttle-val">STOP</div>
+      </div>
+      
+    </div>
+  </div>
+  
+  <div id="bottom">
+    <div class="key-hints">
+      <div class="hint"><span class="key">W</span>/<span class="key">↑</span> Acelera</div>
+      <div class="hint"><span class="key">S</span>/<span class="key">↓</span> Freia</div>
+      <div class="hint"><span class="key">A</span>/<span class="key">←</span> Esq</div>
+      <div class="hint"><span class="key">D</span>/<span class="key">→</span> Dir</div>
+      <div class="hint"><span class="key">Space</span> Stop</div>
+    </div>
+    <footer>ESP32 RC CAR &nbsp;·&nbsp; MQTT over WebSocket</footer>
+  </div>
+  
+</div>
+<script src="controller_script.js"></script>
+</body>
+</html>

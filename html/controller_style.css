@@ -1,0 +1,201 @@
+:root {
+  --bg:       #080610;
+  --panel:    #120f1e;
+  --border:   #2d1f4e;
+  --glow-r:   #f43f8e;
+  --glow-g:   #a855f7;
+  --glow-y:   #c084fc;
+  --glow-gr:  #7c3aed;
+  --text:     #d8cff0;
+  --text-dim: #6b5a8a;
+  --radius:   14px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Orbitron', monospace;
+  margin: 0;
+}
+
+/* Grid background */
+body::before {
+  content: ''; position: fixed; inset: 0;
+  background-image:
+    linear-gradient(rgba(168,85,247,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(168,85,247,.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none; z-index: 0;
+}
+body::after {
+  content: ''; position: fixed; inset: 0;
+  background: radial-gradient(ellipse at 50% 50%, transparent 40%, #080610 100%);
+  pointer-events: none; z-index: 0;
+}
+
+/* ── App wrapper ── */
+#app {
+  position: relative; z-index: 1;
+  width: 100%; height: 100dvh;
+  display: flex; flex-direction: column;
+  padding: 14px 16px 20px;
+}
+
+/* ── Top ── */
+#top { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+
+header { text-align: center; width: 100%; }
+.logo {
+  font-size: clamp(1rem, 4.5vw, 1.5rem); font-weight: 900; letter-spacing: .25em;
+  color: var(--glow-g); text-shadow: 0 0 8px var(--glow-g), 0 0 28px rgba(168,85,247,.5);
+}
+.logo span { color: var(--glow-r); text-shadow: 0 0 8px var(--glow-r), 0 0 28px rgba(244,63,142,.4); }
+.subtitle { font-family: 'Share Tech Mono', monospace; font-size: .6rem; color: var(--text-dim); letter-spacing: .3em; margin-top: 3px; }
+
+.status-bar { display: flex; gap: 10px; align-items: center; justify-content: center; flex-wrap: wrap; }
+.badge {
+  font-family: 'Share Tech Mono', monospace; font-size: .58rem; letter-spacing: .13em;
+  padding: 4px 10px; border-radius: 4px; border: 1px solid var(--border); background: var(--panel);
+  display: flex; align-items: center; gap: 6px;
+}
+.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--glow-r); box-shadow: 0 0 6px var(--glow-r); transition: background .3s, box-shadow .3s; }
+.dot.on { background: var(--glow-g); box-shadow: 0 0 8px var(--glow-g), 0 0 18px rgba(168,85,247,.5); }
+#status-text { color: var(--text-dim); transition: color .3s; }
+#status-text.on { color: var(--glow-g); }
+#action-label { color: var(--glow-y); text-shadow: 0 0 8px rgba(192,132,252,.4); min-width: 140px; text-align: center; }
+
+/* ── Middle ── */
+#middle {
+  flex: 1; min-height: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 16px;
+}
+
+/* ── Bottom ── */
+#bottom { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+
+.key-hints { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+.hint { font-family: 'Share Tech Mono', monospace; font-size: .52rem; color: var(--text-dim); display: flex; align-items: center; gap: 4px; }
+.key { padding: 2px 5px; border: 1px solid var(--border); border-radius: 3px; background: var(--panel); font-size: .52rem; }
+footer { font-family: 'Share Tech Mono', monospace; font-size: .52rem; color: var(--text-dim); letter-spacing: .2em; text-align: center; }
+
+/* ══ VELOCÍMETRO (display numérico) ══ */
+.speedo-wrap {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 28px;
+  box-shadow: 0 0 20px rgba(168,85,247,.15), inset 0 0 20px rgba(0,0,0,.3);
+}
+.speedo-number {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: clamp(2.8rem, 8vw, 4.2rem);
+  line-height: 1;
+  color: var(--glow-g);
+  text-shadow: 0 0 16px rgba(168,85,247,.8), 0 0 40px rgba(168,85,247,.3);
+  letter-spacing: .05em;
+  transition: color .2s, text-shadow .2s;
+  min-width: 3ch; text-align: center;
+}
+.speedo-unit-text {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .55rem; color: var(--text-dim); letter-spacing: .3em;
+}
+
+/* ══ INPUT ROW ══ */
+.input-row {
+  display: flex; align-items: center; justify-content: center;
+  gap: clamp(16px, 5vw, 48px); width: 100%; max-width: 560px;
+}
+
+/* ══ JOYSTICK (apenas eixo X — direção) ══ */
+.joystick-wrap { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.panel-label { font-family: 'Share Tech Mono', monospace; font-size: .52rem; letter-spacing: .2em; color: var(--text-dim); }
+
+.joystick-outer {
+  position: relative;
+  /* Pill horizontal: largo e baixo */
+  width: clamp(180px, 38vw, 240px);
+  height: clamp(52px, 11vw, 68px);
+  border-radius: 99px;
+  background: var(--panel); border: 2px solid var(--border);
+  box-shadow: 0 0 24px rgba(0,0,0,.6), inset 0 0 20px rgba(0,0,0,.5);
+  cursor: grab; touch-action: none;
+}
+/* Linha central de referência */
+.joystick-outer::before {
+  content: ''; position: absolute;
+  left: 50%; top: 20%; width: 1px; height: 60%;
+  background: var(--border); transform: translateX(-50%);
+}
+.joystick-outer::after {
+  content: ''; position: absolute;
+  top: 50%; left: 6%; height: 1px; width: 88%;
+  background: var(--border); opacity: .5; transform: translateY(-50%);
+}
+.joy-zone { display: none; } /* não usado no pill */
+
+.joystick-knob {
+  position: absolute;
+  /* Knob circular, altura = 80% do pill */
+  width: auto; aspect-ratio: 1;
+  height: 72%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #2a1f3d, #100c1a);
+  border: 2px solid var(--glow-g);
+  box-shadow: 0 0 14px rgba(168,85,247,.6), 0 4px 12px rgba(0,0,0,.6);
+  top: 50%; left: 50%;
+  transform: translate(calc(-50% + var(--jx, 0px)), -50%);
+  pointer-events: none; transition: border-color .15s, box-shadow .15s;
+}
+.joystick-knob.active { border-color: var(--glow-y); box-shadow: 0 0 18px rgba(192,132,252,.7), 0 4px 12px rgba(0,0,0,.6); }
+
+.steer-bar-wrap { width: clamp(180px, 38vw, 240px); display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.steer-track { width: 100%; height: 6px; background: var(--border); border-radius: 99px; position: relative; }
+.steer-fill { position: absolute; height: 100%; border-radius: 99px; background: var(--glow-y); box-shadow: 0 0 5px var(--glow-y); top: 0; transition: left .04s, width .04s; }
+.steer-center { position: absolute; left: 50%; top: -3px; width: 2px; height: 12px; background: var(--text-dim); transform: translateX(-50%); }
+.steer-val { font-family: 'Share Tech Mono', monospace; font-size: .58rem; color: var(--glow-y); }
+
+/* ══ THROTTLE SLIDER (apenas positivo — sem ré) ══ */
+.throttle-wrap { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+
+.throttle-outer {
+  position: relative;
+  width: clamp(46px, 10vw, 58px); height: clamp(100px, 22vw, 140px);
+  background: var(--panel); border: 2px solid var(--border); border-radius: 99px;
+  cursor: grab; touch-action: none;
+  box-shadow: 0 0 24px rgba(0,0,0,.6), inset 0 0 20px rgba(0,0,0,.5);
+}
+.throttle-track {
+  position: absolute; width: 6px; border-radius: 99px;
+  top: 10%; bottom: 10%; left: 50%; transform: translateX(-50%);
+  background: var(--border);
+}
+/* Fill cresce do fundo para cima (0% = fundo, 100% = topo) */
+.throttle-fill {
+  position: absolute; bottom: 0; width: 100%;
+  border-radius: 99px;
+  background: var(--glow-g); box-shadow: 0 0 8px var(--glow-g);
+  transition: height .04s;
+}
+.throttle-knob {
+  position: absolute; width: 70%; aspect-ratio: 1; border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #2a3a50, #0f1820);
+  border: 2px solid var(--glow-g);
+  box-shadow: 0 0 12px rgba(168,85,247,.4), 0 4px 12px rgba(0,0,0,.6);
+  /* posição: bottom=10% (idle) → top=10% (máx) */
+  bottom: 10%; left: 50%; transform: translateX(-50%);
+  pointer-events: none;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Share Tech Mono', monospace; font-size: .52rem;
+  color: var(--glow-gr);
+  transition: bottom .04s, border-color .15s, box-shadow .15s;
+}
+.throttle-knob.active {
+  border-color: var(--glow-y); box-shadow: 0 0 18px rgba(192,132,252,.5), 0 4px 12px rgba(0,0,0,.6);
+  color: var(--glow-y);
+}
+.throttle-val { font-family: 'Share Tech Mono', monospace; font-size: .58rem; color: var(--text-dim); }
